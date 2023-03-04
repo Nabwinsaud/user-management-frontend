@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { phoneNumberRegex, specialCharacter } from "../utils/regex";
 
+ // /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/g // found this regex crucial
 // export const productSearchSchema = z.object({
 //   page: z.number().catch(1),
 //   filter: z.string().catch(""),
