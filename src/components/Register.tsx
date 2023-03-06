@@ -1,0 +1,117 @@
+import React from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import getDeviceInfo from "../utils/deviceInfot";
+import { useForm, SubmitHandler } from "react-hook-form";
+import Input from "./Input";
+import { IRegister } from "../interfaces/auth.interface";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signupSchema } from "../validations/form.validation";
+import Button from "./Button";
+import { getAuthServices } from "../services/authServices";
+import { toast } from "react-hot-toast";
+export default function Register() {
+  const { browser, device, os, time } = getDeviceInfo();
+  const queryClient = useQueryClient();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<IRegister>({ resolver: zodResolver(signupSchema) });
+
+  const { registerUser } = getAuthServices();
+
+  // console.log("device information is ", browser, device, os, time);
+
+  const { mutate, isLoading } = useMutation({
+    mutationKey: ["registerUser"],
+    mutationFn: registerUser,
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries({ queryKey: ["registerUser"] });
+        reset();
+      }
+      if (!data.success) {
+        toast.error(data?.message);
+      }
+    },
+  });
+
+  // console.log("Loading state  is", isLoading);
+
+  const onSubmit: SubmitHandler<IRegister> = async (data: IRegister) => {
+    console.log("submitted Data is", data);
+    mutate({ deviceInfo: [{ device, browser, os, time }], ...data });
+  };
+  return (
+    <div>
+      <div className="flex flex-col h-screen w-full items-center justify-center  px-2">
+        <div className="flex flex-col w-full px-8 py-4 sm:w-full md:w-[50%] lg:w-[50%] shadow-lg md:py-6 md:px-6">
+          <p className="text-lg capitalize">RegisterUser</p>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 md:gap-2 lg:space-x-3">
+              <Input name="firstName" type="text" placeholder="john" />
+              <Input name="middleName" type="text" placeholder="van" />
+              <Input name="nepal" type="text" placeholder="doe" />
+            </div>
+            <Input
+              {...register("username")}
+              name="username"
+              type="text"
+              placeholder="Enter your username"
+            />
+            <span className="text-red-500">{errors.username?.message}</span>
+
+            <Input
+              {...register("phone")}
+              name="phone"
+              type="text"
+              placeholder="Enter your phone number"
+            />
+            {/* <span className="text-red-500">{errors.phone?.message}</span> */}
+            <span className="text-red-500">{errors.phone?.message}</span>
+            <Input
+              {...register("email")}
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+            />
+            {/* <span className="text-red-500">{errors.email?.message}</span> */}
+            {errors.email && (
+              <span className="text-red-500">{errors.email.message}</span>
+            )}
+            <Input
+              {...register("password")}
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+            />
+            <span className="text-red-500">{errors.password?.message}</span>
+            <Input
+              {...register("confirmPassword")}
+              name="confirmPassword"
+              type="password"
+              placeholder="confirm password"
+            />
+            <span className="text-red-500">
+              {errors.confirmPassword?.message}
+            </span>
+
+            {/* {errors.confirmPassword && (
+              <span className="text-red-500">
+                {errors.confirmPassword.message}
+              </span>
+            )} */}
+
+            <Button type="submit" disabled={isLoading} variant="primary">
+              {isLoading ? "Registering..." : "Register"}
+            </Button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// export default React.memo(Register);

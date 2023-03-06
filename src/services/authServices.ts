@@ -2,7 +2,7 @@
 // update-profile
 // localhost:4000/api/login
 import { axiosInstance } from "../api";
-import { ILogin } from "../interfaces/auth.interface";
+import { ILogin, IRegister } from "../interfaces/auth.interface";
 import { Response } from "../interfaces/response.interface";
 
 export const getAuthServices = () => {
@@ -16,7 +16,6 @@ export const getAuthServices = () => {
         message: "Login successfully",
         data: response.data,
       };
-      console.log("response is", response);
     } catch (error: any) {
       return {
         success: false,
@@ -26,5 +25,27 @@ export const getAuthServices = () => {
     }
   };
 
-  return { login };
+  const registerUser = async (data: IRegister) => {
+    try {
+      const { confirmPassword, deviceInfo, ...rest } = data;
+      const response = await axiosInstance.post("/register", {
+        ...rest,
+        deviceInfo: [deviceInfo],
+      });
+      console.log("response is ", response);
+      return {
+        success: true,
+        message: "register successfully",
+        data: response.data,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response.data.message,
+        data: null,
+      };
+    }
+  };
+
+  return { login, registerUser };
 };

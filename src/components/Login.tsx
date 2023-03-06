@@ -7,9 +7,11 @@ import { toast } from "react-hot-toast";
 import Input from "./Input";
 import Button from "./Button";
 import { loginSchema } from "../validations/form.validation";
+import getDeviceInfo from "../utils/deviceInfot";
 export default function Login() {
   const { login } = getAuthServices();
   const queryClient = useQueryClient();
+  const { browser, device, os, time } = getDeviceInfo();
 
   const {
     register,
@@ -17,6 +19,7 @@ export default function Login() {
     reset,
     formState: { errors },
   } = useForm<ILogin>({ resolver: zodResolver(loginSchema) });
+  // console.log("device information is ", browser, os, time);
 
   const { mutate, isLoading } = useMutation({
     mutationKey: ["login"],
@@ -25,6 +28,7 @@ export default function Login() {
       if (data.success) {
         toast.success(data?.message);
         queryClient.invalidateQueries({ queryKey: ["login"] });
+        console.log("device information is ", browser, device, os, time);
         reset();
       }
       if (!data.success) {
