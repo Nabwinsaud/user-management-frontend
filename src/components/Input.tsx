@@ -31,10 +31,10 @@ interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type: "text" | "email" | "password" | "file" | "number";
   placeholder?: string;
 }
-const testClass1 = cls("fizz", "buzz");
-const testClass2 = cls("fizz", { buzz: true });
-const testClass3 = cls({ "fizz-buzz": false });
-console.log("testclass1 is", testClass1);
+// const testClass1 = cls("fizz", "buzz");
+// const testClass2 = cls("fizz", { buzz: true });
+// const testClass3 = cls({ "fizz-buzz": false });
+// console.log("testclass1 is", testClass1);
 
 const Input = React.forwardRef<HTMLInputElement, IInputProps>(
   ({ name, type, placeholder, ...rest }, ref) => {
@@ -58,7 +58,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>(
         />
 
         {type === "password" && (
-          <button className="absolute top-3 right-3" onClick={toggleShow}>
+          <button onClick={toggleShow} className="absolute  z-10 top-3 right-3">
             {show ? <AiFillEye /> : <AiFillEyeInvisible />}
           </button>
         )}

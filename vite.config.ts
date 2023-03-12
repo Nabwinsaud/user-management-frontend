@@ -7,6 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@interfaces": path.resolve(__dirname, "./src/interfaces"),
+      "@constants": path.resolve(__dirname, "./src/constants"),
       "@api": path.resolve(__dirname, "./src/api"),
       "@zustand": path.resolve(__dirname, "./src/zustand"),
       "@data": path.resolve(__dirname, "./src/data"),

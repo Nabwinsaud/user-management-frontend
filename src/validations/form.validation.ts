@@ -102,7 +102,7 @@ export const signupSchema = z
     // isVerified: z.boolean().default(false).optional(),
     //   role: z.string().default('user'),
     // role: z.enum(["USER", "ADMIN"]).default("USER").catch("USER"),
-    deviceInfo: deviceInfoSchema.array().optional(),
+    deviceInfo: deviceInfoSchema.optional(),
   })
   .refine((val) => val.password === val.confirmPassword, {
     path: ["confirmPassword"],

@@ -19,6 +19,7 @@
     "paths": {
       "@interfaces/*":["src/interfaces/*"],
       "@api/*":["src/api/*"],
+      "@constants/*":["src/constants/*"],
       "@config/*":["src/config/*"],
       "@hooks/*":["src/hooks/*"],
       "@admin/*":["src/admin/*"],

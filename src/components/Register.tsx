@@ -8,6 +8,9 @@ import { signupSchema, RegisterType } from "../validations/form.validation";
 import Button from "./Button";
 import { getAuthServices } from "../services/authServices";
 import { toast } from "react-hot-toast";
+import { uploadFiles } from "@utils/upload";
+import { MediaType } from "@constants/enum";
+import { useNavigate } from "react-router-dom";
 export default function Register() {
   const { browser, device, os, time } = getDeviceInfo();
   const queryClient = useQueryClient();
@@ -15,10 +18,12 @@ export default function Register() {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<RegisterType>({ resolver: zodResolver(signupSchema) });
 
   const { registerUser } = getAuthServices();
+  const navigate = useNavigate();
 
   // console.log("device information is ", browser, device, os, time);
 
@@ -29,6 +34,7 @@ export default function Register() {
       if (data.success) {
         toast.success(data?.message);
         queryClient.invalidateQueries({ queryKey: ["registerUser"] });
+        navigate("/verify-otp");
         reset();
       }
       if (!data.success) {
@@ -40,9 +46,22 @@ export default function Register() {
   // console.log("Loading state  is", isLoading);
 
   // const onSubmit: SubmitHandler<IRegister> = async (data: IRegister) => {
+  const avatar = getValues("avatar");
+  // console.log("images are", images);
+
+  // React.useEffect(() => {}, [images]);
   const onSubmit: SubmitHandler<RegisterType> = async (data: RegisterType) => {
     console.log("submitted Data is", data);
-    mutate({ deviceInfo: [{ device, browser, os, time }], ...data });
+    // const profilePicture = await Promise.resolve(
+    //   uploadFiles.single({
+    //     file: data.avatar,
+    //     type: MediaType.PROFILE,
+    //   })
+    // );
+    if (avatar) {
+      mutate({ deviceInfo: getDeviceInfo(), avatar, ...data });
+    }
+    //   // avatar: data.avatar[0],
   };
   return (
     <div>
@@ -100,9 +119,11 @@ export default function Register() {
             <span className="text-red-500">
               {errors && errors.confirmPassword?.message}
             </span>
-            <Button type="submit" disabled={isLoading} variant="primary">
-              {isLoading ? "Registering..." : "Register"}
-            </Button>
+            <div>
+              <Button type="submit" disabled={isLoading} variant="primary">
+                {isLoading ? "Registering..." : "Register"}
+              </Button>
+            </div>
           </form>
         </div>
       </div>

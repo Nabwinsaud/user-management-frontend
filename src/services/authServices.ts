@@ -29,12 +29,8 @@ export const getAuthServices = () => {
   // const registerUser = async (data: IRegister) => {
   const registerUser = async (data: RegisterType) => {
     try {
-      const { confirmPassword, deviceInfo, ...rest } = data;
-      const response = await axiosInstance.post("/register", {
-        ...rest,
-        deviceInfo: [deviceInfo],
-      });
-      console.log("response is ", response);
+      const { confirmPassword, ...rest } = data;
+      const response = await axiosInstance.post("/register", rest);
       return {
         success: true,
         message: "register successfully",
