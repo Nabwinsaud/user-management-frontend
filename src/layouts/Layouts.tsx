@@ -1,11 +1,17 @@
-import {} from "react-router-dom";
-
+import { Outlet } from "react-router-dom";
+import DataGridTable from "../admin/Table";
+import Sidebar from "@components/Sidebar";
+import Dashboard from "@admin/Dashboard";
 export default function Layout() {
   return (
-    <div>
-      <h1 className="text-center my-2 py-2 uppercase font-bold text-xl ">
-        The Layout Nepal
-      </h1>
+    <div className="flex flex-col w-full h-screen">
+      <main className="flex w-full">
+        <Sidebar />
+        <Dashboard />
+      </main>
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 }

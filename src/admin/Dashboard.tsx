@@ -1,4 +1,3 @@
-
 export default function Dashboard() {
-  return <div>Dashboard</div>;
+  return <div className="flex w-full flex-6">Dashboard</div>;
 }

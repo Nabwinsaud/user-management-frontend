@@ -45,8 +45,12 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>(
         <input
           required={false}
           ref={ref}
-          className="border rounded-md py-2 px-3 text-gray-600 leading-tight focus:outline-none focus:shadow-outline"
+          className={`border rounded-md py-2 px-2 text-gray-600 leading-tight focus:outline-none focus:shadow-outline`}
           name={name}
+          accept={
+            type === "file" ? "image/png, image/jpeg,image/jpg" : undefined
+            // type === "file" ? "image/png" : undefined
+          }
           // type={type}
           type={type === "password" ? (show ? "text" : "password") : type}
           placeholder={placeholder}

@@ -1,19 +1,25 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { RouterContext } from "@tanstack/router";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Login from "@components/Login";
+import Register from "@components/Register";
+import { useCountStore } from "./zustand/Count";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "@layouts/Layouts";
+import PageNotFound from "./404/PageNotFound";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [],
+    errorElement: <PageNotFound />,
+  },
+  { path: "login", element: <Login /> },
+  { path: "register", element: <Register /> },
+]);
+
 function App() {
-  const queryClient = new QueryClient();
-  return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        {/* <Login /> */}
-        <Register />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

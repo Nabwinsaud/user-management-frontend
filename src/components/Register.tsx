@@ -3,9 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import getDeviceInfo from "../utils/deviceInfot";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Input from "./Input";
-import { IRegister } from "../interfaces/auth.interface";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema } from "../validations/form.validation";
+import { signupSchema, RegisterType } from "../validations/form.validation";
 import Button from "./Button";
 import { getAuthServices } from "../services/authServices";
 import { toast } from "react-hot-toast";
@@ -17,7 +16,7 @@ export default function Register() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<IRegister>({ resolver: zodResolver(signupSchema) });
+  } = useForm<RegisterType>({ resolver: zodResolver(signupSchema) });
 
   const { registerUser } = getAuthServices();
 
@@ -40,7 +39,8 @@ export default function Register() {
 
   // console.log("Loading state  is", isLoading);
 
-  const onSubmit: SubmitHandler<IRegister> = async (data: IRegister) => {
+  // const onSubmit: SubmitHandler<IRegister> = async (data: IRegister) => {
+  const onSubmit: SubmitHandler<RegisterType> = async (data: RegisterType) => {
     console.log("submitted Data is", data);
     mutate({ deviceInfo: [{ device, browser, os, time }], ...data });
   };
@@ -50,11 +50,11 @@ export default function Register() {
         <div className="flex flex-col w-full px-8 py-4 sm:w-full md:w-[50%] lg:w-[50%] shadow-lg md:py-6 md:px-6">
           <p className="text-lg capitalize">RegisterUser</p>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 md:gap-2 lg:space-x-3">
+            {/* <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3 md:gap-2 lg:space-x-3">
               <Input name="firstName" type="text" placeholder="john" />
               <Input name="middleName" type="text" placeholder="van" />
               <Input name="nepal" type="text" placeholder="doe" />
-            </div>
+            </div> */}
             <Input
               {...register("username")}
               name="username"
@@ -63,13 +63,17 @@ export default function Register() {
             />
             <span className="text-red-500">{errors.username?.message}</span>
 
+            <Input {...register("avatar")} name="avatar" type="file" />
+            <span className="text-red-500">
+              {errors.avatar?.message as string}
+            </span>
+
             <Input
               {...register("phone")}
               name="phone"
               type="text"
               placeholder="Enter your phone number"
             />
-            {/* <span className="text-red-500">{errors.phone?.message}</span> */}
             <span className="text-red-500">{errors.phone?.message}</span>
             <Input
               {...register("email")}
@@ -77,7 +81,6 @@ export default function Register() {
               type="email"
               placeholder="Enter your email"
             />
-            {/* <span className="text-red-500">{errors.email?.message}</span> */}
             {errors.email && (
               <span className="text-red-500">{errors.email.message}</span>
             )}
@@ -95,15 +98,8 @@ export default function Register() {
               placeholder="confirm password"
             />
             <span className="text-red-500">
-              {errors.confirmPassword?.message}
+              {errors && errors.confirmPassword?.message}
             </span>
-
-            {/* {errors.confirmPassword && (
-              <span className="text-red-500">
-                {errors.confirmPassword.message}
-              </span>
-            )} */}
-
             <Button type="submit" disabled={isLoading} variant="primary">
               {isLoading ? "Registering..." : "Register"}
             </Button>

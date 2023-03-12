@@ -1,3 +1,4 @@
+import { RegisterType } from "./../validations/form.validation";
 // localhost:4000/api/register
 // update-profile
 // localhost:4000/api/login
@@ -25,7 +26,8 @@ export const getAuthServices = () => {
     }
   };
 
-  const registerUser = async (data: IRegister) => {
+  // const registerUser = async (data: IRegister) => {
+  const registerUser = async (data: RegisterType) => {
     try {
       const { confirmPassword, deviceInfo, ...rest } = data;
       const response = await axiosInstance.post("/register", {
